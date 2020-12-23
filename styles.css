@@ -46,11 +46,6 @@ body {
   justify-content: space-between;
 }
 
-.list-group-my:active, 
-.list-group-my:focus {
-    outline: none;
-}
-
 .list-group-my .list-group-item {
   width: 48%;
 }
@@ -94,6 +89,10 @@ body {
   background-color: var(--input-focus-bg-color);
   border-color: var(--input-focus-border-color);
   box-shadow: var(--input-focus-box-shadow);
+}
+
+.card-body #body {
+	min-height: 8em;
 }
 
 .checkOk h4, .checkOk p {

@@ -35,10 +35,7 @@ const tasks = [
 
 (function(arrOfTasks) {
 
-  console.log(arrOfTasks);
-
   const lastTasks = localStorage.getItem('app_tasks');
-  console.log(lastTasks);
 
   let objOfTasks = {};
 
@@ -52,10 +49,6 @@ const tasks = [
   } else {
     objOfTasks = JSON.parse(lastTasks);
   }
-
-
-  console.log(objOfTasks);
-
 
   // style for themes
   const themes = {
