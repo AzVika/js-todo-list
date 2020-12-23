@@ -15,7 +15,7 @@
   </head>
   <body>
     <nav class="header navbar navbar-dark bg-primary">
-      <a class="navbar-brand">Navbar</a>
+      <a class="navbar-brand">Task List</a>
       <form class="form-inline">
         <select class="form-control form-control-sm" id="themeSelect">
           <option value="default">Theme Default</option>
@@ -28,7 +28,7 @@
     <div class="form-section mt-5">
       <div class="container">
         <div class="row">
-          <div class="col col-8 mx-auto">
+          <div class="col-md-12 col-lg-8 mx-auto">
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">Add new task</h5>
@@ -40,13 +40,12 @@
                     class="form-control"
                     placeholder="Task title"
                   />
-                  <input
-                    type="text"
+                  <textarea
                     name="body"
                     id="body"
                     class="form-control mt-3"
                     placeholder="Task body"
-                  />
+                  ></textarea>
                   <button type="submit" class="btn btn-primary mt-4">
                     Add task
                   </button>
@@ -65,7 +64,7 @@
           <button type="button" class="btn btn-warning unfinish-tasks">Unfinished tasks</button>
         </div>
         <div class="tasks-not"></div>
-        <ul class="list-group"></ul>
+        <ul class="list-group-my row"></ul>
       </div>
     </div>
     <script src="app.js"></script>

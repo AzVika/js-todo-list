@@ -1,45 +1,60 @@
-
-// The form
-// Tasks list
+// Tasks list default
 const tasks = [
-  {
-    _id: '5d2ca9e2e03d40b326596aa7',
-    completed: true,
-    body:
-      'Occaecat non ea quis occaecat ad culpa amet deserunt incididunt elit fugiat pariatur. Exercitation commodo culpa in veniam proident laboris in. Excepteur cupidatat eiusmod dolor consectetur exercitation nulla aliqua veniam fugiat irure mollit. Eu dolor dolor excepteur pariatur aute do do ut pariatur consequat reprehenderit deserunt.\r\n',
-    title: 'Eu ea incididunt sunt consectetur fugiat non. 1',
-  },
-  {
-    _id: '5d2ca9e29c8a94095c1288e0',
-    completed: false,
-    body:
-      'Aliquip cupidatat ex adipisicing veniam do tempor. Lorem nulla adipisicing et esse cupidatat qui deserunt in fugiat duis est qui. Est adipisicing ipsum qui cupidatat exercitation. Cupidatat aliqua deserunt id deserunt excepteur nostrud culpa eu voluptate excepteur. Cillum officia proident anim aliquip. Dolore veniam qui reprehenderit voluptate non id anim.\r\n',
-    title:
-      'Deserunt laborum id consectetur reprehenderit ipsum. 2',
-  },
-  {
-    _id: '5d2ca9e2e03d40b3232496aa7',
-    completed: true,
-    body:
-      'Occaecat non ea quis occaecat ad culpa amet deserunt incididunt elit fugiat pariatur. Exercitation commodo culpa in veniam proident laboris in. Excepteur cupidatat eiusmod dolor consectetur exercitation nulla aliqua veniam fugiat irure mollit. Eu dolor dolor excepteur pariatur aute do do ut pariatur consequat reprehenderit deserunt.\r\n',
-    title: 'Eu ea incididunt sunt consectetur fugiat non. 3',
-  },
-  {
-    _id: '5d2ca9e29c8a94095564788e0',
-    completed: false,
-    body:
-      'Aliquip cupidatat ex adipisicing veniam do tempor. Lorem nulla adipisicing et esse cupidatat qui deserunt in fugiat duis est qui. Est adipisicing ipsum qui cupidatat exercitation. Cupidatat aliqua deserunt id deserunt excepteur nostrud culpa eu voluptate excepteur. Cillum officia proident anim aliquip. Dolore veniam qui reprehenderit voluptate non id anim.\r\n',
-    title:
-      'Deserunt laborum id consectetur pariatur veniam occaecat occaecat tempor voluptate pariatur nulla reprehenderit ipsum. 4',
-  },
-];
+    {
+      _id: '5d2ca9e2e03d40b326596aa7',
+      completed: false,
+      body:
+        'You see this task because you have entered this page for the first time from this device. To add a new task, fill in the form above and click the "Add task" button. The new task will appear at the very top of the list. When you have read this, click "Change task" and the task will be considered completed (crossed out).\r\n',
+      title: 'Task 1 - get to know the new application',
+    },
+    {
+      _id: '5d2ca9e29c8a94095c1288e0',
+      completed: false,
+      body:
+        'If you do not like the colors in this theme, then you can choose a different one using the drop-down match in the upper right corner. The "All Tasks" button sorts the tasks: completed at the bottom, recent at the top. The "Unfinished Tasks" button sorts the tasks: there are no completed ones, the last ones are at the top.\r\n',
+      title:
+        'Task 2 - Change the theme and sort tasks',
+    },
+    {
+      _id: '5d2ca9e2e03d40b3232496aa7',
+      completed: true,
+      body:
+        'If the task is crossed out, then it is completed, but not removed from the match. If you clicked on "Change task" accidentally, you can click on this button again, and the task will not be completed.\r\n',
+      title: 'Task 3 - this task is completed',
+    },
+    {
+      _id: '5d2ca9e29c8a94095564788e0',
+      completed: false,
+      body:
+        'You created a task and decided that you will not complete it. Then delete it, click "Delete task" and "Ok".\r\n',
+      title:
+        'Task  4 - I want to delete this',
+    },
+  ];
+
 
 (function(arrOfTasks) {
 
-  const objOfTasks = arrOfTasks.reduce((acc, task) => {
-    acc[task._id] = task;
-    return acc;
-  }, {});
+  console.log(arrOfTasks);
+
+  const lastTasks = localStorage.getItem('app_tasks');
+  console.log(lastTasks);
+
+  let objOfTasks = {};
+
+  if(lastTasks === null && typeof lastTasks === "object") {
+    objOfTasks = arrOfTasks.reduce((acc, task) => {
+      acc[task._id] = task;
+      return acc;
+    }, {});
+
+    updateLocalStorage();
+  } else {
+    objOfTasks = JSON.parse(lastTasks);
+  }
+
+
+  console.log(objOfTasks);
 
 
   // style for themes
@@ -115,7 +130,7 @@ const tasks = [
 
 
   // Elements UI
-  const listContainer = document.querySelector('.tasks-list-section .list-group');
+  const listContainer = document.querySelector('.tasks-list-section .list-group-my');
   const tasksNot = document.querySelector('.tasks-not');
   const allTasks = document.querySelector('.all-tasks');
   const unfinishTasks = document.querySelector('.unfinish-tasks');
@@ -137,24 +152,23 @@ const tasks = [
 
 
 
+  function updateLocalStorage () {
+    localStorage.setItem('app_tasks', JSON.stringify(objOfTasks));
+  }
+
+
   function renderAllTasks (tasksList) {
     if (Object.keys(tasksList).length === 0) {
       console.error('Submit task list');
       tasksNot.textContent = "No tasks.";
+      tasksNot.classList.add('alert', 'alert-danger');
       return;
     }
-
 
     const fragment = document.createDocumentFragment();
 
     Object.values(tasksList).forEach(task => {
       const li = listItemTemplate(task);
-      if(task.completed) {
-        li.classList.add('checkOk');
-        const checkBtn = li.querySelector('.check-btn');
-        checkBtn.classList.remove('btn-warning');
-        checkBtn.classList.add('btn-success');    
-      }
       fragment.appendChild(li);
     });
     listContainer.appendChild(fragment);
@@ -162,15 +176,18 @@ const tasks = [
   }
 
 
-  function listItemTemplate({ _id, title, body } = {}) {
+  function listItemTemplate({ _id, title, body, completed } = {}) {
     const li = document.createElement('li');
     li.classList.add(
       'list-group-item',
       'd-flex',
       'align-items-center',
       'flex-wrap',
-      'mt-2'
+      'mt-4',
       );
+    if(completed) {
+      li.classList.add('checkOk');
+    }
     li.setAttribute('data-task-id', _id);
 
 
@@ -179,8 +196,13 @@ const tasks = [
 
     const checkBtn = document.createElement('button');
     checkBtn.textContent = 'Check task';
-    checkBtn.classList.add('btn', 'btn-warning', 'check-btn');
-
+    checkBtn.classList.add('btn', 'check-btn');
+    if(completed) {
+      checkBtn.classList.add('btn-success');
+    } else {
+      checkBtn.classList.add('btn-warning');
+    }
+    
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'Delete task';
     deleteBtn.classList.add('btn', 'btn-danger', 'delete-btn');
@@ -232,6 +254,8 @@ const tasks = [
     };
 
     objOfTasks[newTask._id] = newTask;
+    updateLocalStorage();
+    tasksNot.classList.remove('alert', 'alert-danger');
 
     return {...newTask};
 
@@ -250,6 +274,7 @@ const tasks = [
   function deleteTaskFromHtml(confirmed, el) {
     if (!confirmed) return;
     el.remove();
+    updateLocalStorage();
   }
 
 
@@ -261,6 +286,7 @@ const tasks = [
       deleteTaskFromHtml(confirmed, parent);
       if (Object.keys(objOfTasks).length === 0) {
         tasksNot.textContent = "No tasks.";
+        tasksNot.classList.add('alert', 'alert-danger');
         return;
       }
     }
@@ -283,6 +309,7 @@ const tasks = [
       }
       
       objOfTasks[id].completed = !objOfTasks[id].completed;
+      updateLocalStorage();
     }
   }
 
@@ -293,6 +320,7 @@ const tasks = [
     }).reverse();
     const objAllTasks = Object.fromEntries(arrAllTasks);
     tasksNot.textContent = '';
+    tasksNot.classList.remove('alert', 'alert-danger');
     listContainer.textContent = '';
     renderAllTasks(objAllTasks);
   }
@@ -302,6 +330,7 @@ const tasks = [
     const arrOfNoOkTasks = Object.entries(objOfTasks).filter( (task) => !task[1].completed).reverse();
     const objOfNoOkTasks = Object.fromEntries(arrOfNoOkTasks);
     tasksNot.textContent = '';
+    tasksNot.classList.remove('alert', 'alert-danger');
     listContainer.textContent = '';
     renderAllTasks(objOfNoOkTasks);
   }
