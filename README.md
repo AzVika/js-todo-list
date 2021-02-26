@@ -1,5 +1,7 @@
 # Todo list (список задач)
 
+Результат здесь prostovix.info/xxx/js-todo-list/
+
 Написан todo list для закрепления навыков работы с DOM-деревом.
 
 Для стилизации используется Bootstrap 4.
