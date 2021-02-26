@@ -1,6 +1,6 @@
 # Todo list (список задач)
 
-Результат здесь prostovix.info/xxx/js-todo-list/
+Результат здесь https://prostovix.info/xxx/js-todo-list/
 
 Написан todo list для закрепления навыков работы с DOM-деревом.
 
